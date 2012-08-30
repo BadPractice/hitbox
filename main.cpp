@@ -27,7 +27,7 @@
 #define atan2f(x, y) ((float)atan2((x), (y)))
 #endif 
 
-#define MOUSESPEED 2
+#define MOUSESPEED 3
 bool wraped =true;
 int window; 
 float advance = 0.0f;
@@ -35,8 +35,6 @@ GLuint texture;
 int animating = 1;
 int windowHeight, windowWidth;
 int moving = 0;     /* flag that is true while mouse moves */ 
-int begin_x = 0;        /* x value of mouse movement */
-int begin_y = 0;      /* y value of mouse movement */
 GLfloat angle_y = 0;  /* angle of spin around y axis of scene, in degrees */
 GLfloat angle_x = 0;  /* angle of spin around x axis  of scene, in degrees */
 
@@ -143,8 +141,9 @@ void display()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  
   glLoadIdentity();  
 
-  gluLookAt(-sinf(RAD(angle_y)),sinf(RAD(angle_x)), cosf(RAD(angle_y)), 
-            0.,0.,0.,
+  gluLookAt(0.,0.,0.,
+  -sinf(RAD(angle_y)),sinf(RAD(angle_x)), cosf(RAD(angle_y)), 
+            
             0.,1.,0.);
 
   glEnable(GL_TEXTURE_2D);
@@ -187,7 +186,7 @@ void init(int width, int height)
   glShadeModel(GL_SMOOTH);  
 
   resize(width, height);
-
+	glutSetCursor(GLUT_CURSOR_NONE);
   GLsizei w, h;
   tgaInfo *info = 0;
   int mode;
@@ -243,8 +242,6 @@ void mouse(int button, int state, int x, int y)
   case GLUT_LEFT_BUTTON:    /* spin scene around */
     if (state == GLUT_DOWN){
       moving = 1;
-      begin_x = x;
-      begin_y = y;
       
     } else if (state == GLUT_UP){
       moving = 0;
@@ -266,15 +263,13 @@ void mouseMotion(int x, int y) {
     int wh = glutGet(GLUT_WINDOW_HEIGHT);
     /* calculate new modelview matrix values */
     angle_y = angle_y + (x - ww/2)/MOUSESPEED;
-    angle_x = angle_x + (y - wh/2)/MOUSESPEED;
+    angle_x = angle_x - (y - wh/2)/MOUSESPEED;
     if (angle_y > 360.0) angle_y -= 360.0;
     else if (angle_y < -360.0) angle_y += 360.0;
     if (angle_x > 89.0) angle_x = 89.0;
     else if (angle_x < -89.0) angle_x = -89.0;
-    begin_x = x;
-    begin_y = y;
     wraped = false;
-    glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH)/2, glutGet(GLUT_WINDOW_HEIGHT)/2);
+    glutWarpPointer(ww/2, wh/2);
   } 
   else wraped =true; 
     glutPostRedisplay();        
@@ -299,7 +294,6 @@ int main(int argc, char **argv)
   glutMotionFunc(mouseMotion);
   glutPassiveMotionFunc(mouseMotion);
   glutFullScreen();
-  glutSetCursor(GLUT_CURSOR_NONE);
   glutMainLoop();  
   return 0;
 }
