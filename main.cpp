@@ -27,6 +27,7 @@
 #define atan2f(x, y) ((float)atan2((x), (y)))
 #endif 
 
+#define MOUSESPEED 2
 bool wraped =true;
 int window; 
 float advance = 0.0f;
@@ -258,10 +259,11 @@ void mouse(int button, int state, int x, int y)
 void mouseMotion(int x, int y) {
   
   if (wraped) { /* mouse button is pressed */
-    
+    int ww = glutGet(GLUT_WINDOW_WIDTH);
+    int wh = glutGet(GLUT_WINDOW_HEIGHT);
     /* calculate new modelview matrix values */
-    angle_y = angle_y + (x - begin_x);
-    angle_x = angle_x + (y - begin_y);
+    angle_y = angle_y + (x - ww/2)/MOUSESPEED;
+    angle_x = angle_x + (y - wh/2)/MOUSESPEED;
     if (angle_y > 360.0) angle_y -= 360.0;
     else if (angle_y < -360.0) angle_y += 360.0;
     if (angle_x > 89.0) angle_x = 89.0;
@@ -269,11 +271,10 @@ void mouseMotion(int x, int y) {
     begin_x = x;
     begin_y = y;
     wraped = false;
-    glutWarpPointer(windowWidth/2, windowHeight/2);
-    glutPostRedisplay();
-    wraped = true;
-  }  
-    //glutPostRedisplay();        
+    glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH)/2, glutGet(GLUT_WINDOW_HEIGHT)/2);
+  } 
+  else wraped =true; 
+    glutPostRedisplay();        
  
 }
 
@@ -292,8 +293,10 @@ int main(int argc, char **argv)
   init(640, 480);
   glutTimerFunc(15, timer, 1);
  // glutMouseFunc(mouse);
+  glutMotionFunc(mouseMotion);
   glutPassiveMotionFunc(mouseMotion);
   glutFullScreen();
+  glutSetCursor(GLUT_CURSOR_NONE);
   glutMainLoop();  
   return 0;
 }
