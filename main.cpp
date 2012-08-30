@@ -134,6 +134,9 @@ void drawCube()
   glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
   glEnd();
 }
+void drawTeaPot(){
+	glutSolidTeapot(1);
+}
 
 void display()
 {
@@ -153,21 +156,21 @@ void display()
   glPushMatrix();
   glTranslatef(-2, 0, 0);  
   glTranslatef(0, 0, 4);  
-  drawCube();
+  drawTeaPot();
   glTranslatef(0, 0, -4);  
-  drawCube();
+  drawTeaPot();
   glTranslatef(0, 0, -4);  
-  drawCube();
+  drawTeaPot();
   glPopMatrix();
 
   glPushMatrix();
   glTranslatef(2, 0, 0);  
   glTranslatef(0, 0, 4);  
-  drawCube();
+  drawTeaPot();
   glTranslatef(0, 0, -4);  
-  drawCube();
+  drawTeaPot();
   glTranslatef(0, 0, -4);  
-  drawCube();
+  drawTeaPot();
   glPopMatrix();
   
   glDisable(GL_TEXTURE_2D);
