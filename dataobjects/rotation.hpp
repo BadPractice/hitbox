@@ -1,0 +1,20 @@
+#ifdef __APPLE__
+#include <GLUT/glut.h> 
+#include <OpenGL/gl.h>  
+#include <OpenGL/glu.h>  
+#else
+#include <GL/glut.h> 
+#include <GL/gl.h>  
+#include <GL/glu.h>  
+#endif
+
+class Rotation{
+private:
+GLfloat angleY;  /* angle of spin around y axis of scene, in degrees */
+GLfloat angleX;  /* angle of spin around x axis  of scene, in degrees */
+public:
+Rotation();
+GLfloat getX();
+GLfloat getY();
+void add(GLfloat, GLfloat);
+};

@@ -11,6 +11,7 @@
 #include <unistd.h> // for usleep
 #include <stdio.h>
 #include "tga.h"
+#include "dataobjects/rotation.hpp"
 
 #include <math.h>
 
