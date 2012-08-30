@@ -1,4 +1,4 @@
-GLFLAGS=-lglut -lGLU -lGL -lXi -lXmu -lX11 -lm -lpthread
+GLFLAGS=-lglut -lGLU -lGL -lX11 -lm -lpthread
 
 all: hitbox
 
