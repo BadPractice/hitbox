@@ -38,6 +38,7 @@ int windowHeight, windowWidth;
 int moving = 0;     /* flag that is true while mouse moves */ 
 GLfloat angle_y = 0;  /* angle of spin around y axis of scene, in degrees */
 GLfloat angle_x = 0;  /* angle of spin around x axis  of scene, in degrees */
+Rotation *angle;
 
 void reportGLError(const char * msg)
 {
@@ -143,7 +144,7 @@ void display()
   glLoadIdentity();  
 
   gluLookAt(0.,0.,0.,
-  -sinf(RAD(angle_y)),sinf(RAD(angle_x)), cosf(RAD(angle_y)), 
+  -sinf(RAD((*angle).getY())),sinf(RAD((*angle).getX())), cosf(RAD((*angle).getY())), 
             
             0.,1.,0.);
 
@@ -263,12 +264,7 @@ void mouseMotion(int x, int y) {
     int ww = glutGet(GLUT_WINDOW_WIDTH);
     int wh = glutGet(GLUT_WINDOW_HEIGHT);
     /* calculate new modelview matrix values */
-    angle_y = angle_y + (x - ww/2)/MOUSESPEED;
-    angle_x = angle_x - (y - wh/2)/MOUSESPEED;
-    if (angle_y > 360.0) angle_y -= 360.0;
-    else if (angle_y < -360.0) angle_y += 360.0;
-    if (angle_x > 89.0) angle_x = 89.0;
-    else if (angle_x < -89.0) angle_x = -89.0;
+    (*angle).add(angle_x - (y - wh/2)/MOUSESPEED, angle_y + (x - ww/2)/MOUSESPEED);
     wraped = false;
     glutWarpPointer(ww/2, wh/2);
   } 
@@ -280,6 +276,7 @@ void mouseMotion(int x, int y) {
 
 int main(int argc, char **argv) 
 {  
+  angle= new Rotation();
   glutInit(&argc, argv);  
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);  
   glutInitWindowSize(640, 480);  

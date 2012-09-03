@@ -16,5 +16,5 @@ public:
 Rotation();
 GLfloat getX();
 GLfloat getY();
-void add(GLfloat, GLfloat);
+void add(GLfloat, GLfloat);// adding rotation to the already exixting
 };
