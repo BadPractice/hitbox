@@ -72,11 +72,11 @@ void specialKeyPressed(int key, int x, int y)
   switch (key) {
         
   case GLUT_KEY_UP:     /* <cursor up> */
-    advance += 0.1f;
+    advance+=  cosf(RAD((*angle).getY())) * 0.1f;
     glutPostRedisplay();
     break;
   case GLUT_KEY_DOWN:     /* <cursor down> */
-    advance -= 0.1f;
+    advance-= cosf(RAD((*angle).getY())) * 0.1;
     glutPostRedisplay();
     break;
   }
@@ -89,6 +89,14 @@ void keyPressed(unsigned char key, int x, int y)
   case 27:
     glutDestroyWindow(window); 
     exit(0);                   
+    break;
+  case 'w':
+	advance+=  cosf(RAD((*angle).getY())) * 0.1f;
+    glutPostRedisplay();
+    break;
+   case 's':
+	advance-= cosf(RAD((*angle).getY())) * 0.1;
+    glutPostRedisplay();
     break;
   case 'a':
     animating = animating ? 0 : 1;
@@ -145,7 +153,6 @@ void display()
 
   gluLookAt(0.,0.,0.,
   -sinf(RAD((*angle).getY())),sinf(RAD((*angle).getX())), cosf(RAD((*angle).getY())), 
-            
             0.,1.,0.);
 
   glEnable(GL_TEXTURE_2D);
@@ -264,9 +271,10 @@ void mouseMotion(int x, int y) {
     int ww = glutGet(GLUT_WINDOW_WIDTH);
     int wh = glutGet(GLUT_WINDOW_HEIGHT);
     /* calculate new modelview matrix values */
-    (*angle).add(angle_x - (y - wh/2)/MOUSESPEED, angle_y + (x - ww/2)/MOUSESPEED);
+    (*angle).add(angle_x-(y-wh/2)/MOUSESPEED, 
+		angle_y+(x - ww/2)/MOUSESPEED);//adding movement to aim
     wraped = false;
-    glutWarpPointer(ww/2, wh/2);
+    glutWarpPointer(ww/2, wh/2); //setting curser back to middle
   } 
   else wraped =true; 
     glutPostRedisplay();        
