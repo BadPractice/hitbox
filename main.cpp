@@ -31,7 +31,7 @@
 #define MOUSESPEED 3
 bool wraped =true;
 int window; 
-float advance = 0.0f;
+float advance = 0.0f, advanceX =0.0f;
 GLuint texture;
 int animating = 1;
 int windowHeight, windowWidth;
@@ -92,14 +92,22 @@ void keyPressed(unsigned char key, int x, int y)
     break;
   case 'w':
 	advance+=  cosf(RAD((*angle).getY())) * 0.1f;
+	advanceX+= sinf(RAD((*angle).getY())) * 0.1f;
     glutPostRedisplay();
     break;
    case 's':
-	advance-= cosf(RAD((*angle).getY())) * 0.1;
+	advance-= cosf(RAD((*angle).getY())) * 0.1f;
+	advanceX-= sinf(RAD((*angle).getY())) * 0.1f;
     glutPostRedisplay();
     break;
   case 'a':
-    animating = animating ? 0 : 1;
+	advanceX-=  cosf(RAD((*angle).getY())) * 0.1f;
+	advance+= sinf(RAD((*angle).getY())) * 0.1f;
+    glutPostRedisplay();
+    break;
+   case 'd':
+	advanceX+=  cosf(RAD((*angle).getY())) * 0.1f;
+	advance-= sinf(RAD((*angle).getY())) * 0.1f;
     glutPostRedisplay();
     break;
   default:
@@ -159,7 +167,7 @@ void display()
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
   glBindTexture(GL_TEXTURE_2D, texture);
 
-  glTranslatef(0,0,-advance);
+  glTranslatef(advanceX, 0,-advance);
 
   glPushMatrix();
   glTranslatef(-2, 0, 0);  
