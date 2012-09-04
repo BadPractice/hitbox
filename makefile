@@ -5,13 +5,13 @@ all: hitbox
 hitbox: main.o tga.o rotation.o
 	g++ -o hitbox main.o tga.o rotation.o $(GLFLAGS)
 
-main.o: 
+main.o: main.cpp
 	g++ -c main.cpp $(GLFLAGS)
 	
-tga.o:
+tga.o: tga.cpp
 	g++ -c tga.cpp $(GLFLAGS)
 
-rotation.o:
+rotation.o: dataobjects/rotation.cpp dataobjects/rotation.hpp
 	g++ -c dataobjects/rotation.cpp $(GLFLAGS)
 	
 clean:
