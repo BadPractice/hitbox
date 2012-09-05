@@ -93,27 +93,24 @@ void keyPressed(unsigned char key, int x, int y)
     exit(0);                   
     break;
   case 'w':
-	advance+=  cosf(RAD((*angle).getY())) * 0.1f;
-	advanceX+= sinf(RAD((*angle).getY())) * 0.1f;
-	(*camPosition).add(sinf(RAD((*angle).getY())) * 0.1f, cosf(RAD((*angle).getY())) * 0.1f);
+
+	(*camPosition).add(sinf(RAD((*angle).getY())) * 0.1f, //x value
+		cosf(RAD((*angle).getY())) * 0.1f);					//y value
     glutPostRedisplay();
     break;
    case 's':
-	advance-= cosf(RAD((*angle).getY())) * 0.1f;
-	advanceX-= sinf(RAD((*angle).getY())) * 0.1f;
-	(*camPosition).add(-sinf(RAD((*angle).getY())) * 0.1f, -cosf(RAD((*angle).getY())) * 0.1f);
+	(*camPosition).add(-sinf(RAD((*angle).getY())) * 0.1f,
+		-cosf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
     break;
   case 'a':
-	advanceX-=  cosf(RAD((*angle).getY())) * 0.1f;
-	advance+= sinf(RAD((*angle).getY())) * 0.1f;
-	(*camPosition).add(-cosf(RAD((*angle).getY())) * 0.1f,sinf(RAD((*angle).getY())) * 0.1f);
+	(*camPosition).add(-cosf(RAD((*angle).getY())) * 0.1f,
+		sinf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
     break;
    case 'd':
-	advanceX+=  cosf(RAD((*angle).getY())) * 0.1f;
-	advance-= sinf(RAD((*angle).getY())) * 0.1f;
-	(*camPosition).add(cosf(RAD((*angle).getY())) * 0.1f,-sinf(RAD((*angle).getY())) * 0.1f);
+	(*camPosition).add(cosf(RAD((*angle).getY())) * 0.1f,
+		-sinf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
     break;
   default:
@@ -173,7 +170,6 @@ void display()
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
   glBindTexture(GL_TEXTURE_2D, texture);
 
-  //glTranslatef(advanceX, 0,-advance);
 	glTranslatef(camPosition->getX(),0,-camPosition->getY());
   glPushMatrix();
   glTranslatef(-2, 0, 0);  
