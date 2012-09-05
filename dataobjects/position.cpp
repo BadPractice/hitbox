@@ -12,6 +12,6 @@ GLfloat Position::getY(){
 }
 
 void Position::add(GLfloat argX, GLfloat argY){
-	posX=argX;
-	posY=argY;
+	posX+= argX;
+	posY+= argY;
 }

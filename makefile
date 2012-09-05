@@ -17,4 +17,4 @@ rotation.o: dataobjects/rotation.cpp dataobjects/rotation.hpp
 	g++ -c dataobjects/rotation.cpp $(GLFLAGS)
 	
 clean:
-	rm main.o tga.o rotation.o hitbox
+	rm main.o tga.o rotation.o position.o hitbox

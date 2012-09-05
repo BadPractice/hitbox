@@ -40,6 +40,7 @@ int moving = 0;     /* flag that is true while mouse moves */
 GLfloat angle_y = 0;  /* angle of spin around y axis of scene, in degrees */
 GLfloat angle_x = 0;  /* angle of spin around x axis  of scene, in degrees */
 Rotation *angle;
+Position *camPosition;
 
 void reportGLError(const char * msg)
 {
@@ -94,21 +95,25 @@ void keyPressed(unsigned char key, int x, int y)
   case 'w':
 	advance+=  cosf(RAD((*angle).getY())) * 0.1f;
 	advanceX+= sinf(RAD((*angle).getY())) * 0.1f;
+	(*camPosition).add(sinf(RAD((*angle).getY())) * 0.1f, cosf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
     break;
    case 's':
 	advance-= cosf(RAD((*angle).getY())) * 0.1f;
 	advanceX-= sinf(RAD((*angle).getY())) * 0.1f;
+	(*camPosition).add(-sinf(RAD((*angle).getY())) * 0.1f, -cosf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
     break;
   case 'a':
 	advanceX-=  cosf(RAD((*angle).getY())) * 0.1f;
 	advance+= sinf(RAD((*angle).getY())) * 0.1f;
+	(*camPosition).add(-cosf(RAD((*angle).getY())) * 0.1f,sinf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
     break;
    case 'd':
 	advanceX+=  cosf(RAD((*angle).getY())) * 0.1f;
 	advance-= sinf(RAD((*angle).getY())) * 0.1f;
+	(*camPosition).add(cosf(RAD((*angle).getY())) * 0.1f,-sinf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
     break;
   default:
@@ -168,8 +173,8 @@ void display()
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
   glBindTexture(GL_TEXTURE_2D, texture);
 
-  glTranslatef(advanceX, 0,-advance);
-
+  //glTranslatef(advanceX, 0,-advance);
+	glTranslatef(camPosition->getX(),0,-camPosition->getY());
   glPushMatrix();
   glTranslatef(-2, 0, 0);  
   glTranslatef(0, 0, 4);  
@@ -294,6 +299,7 @@ void mouseMotion(int x, int y) {
 int main(int argc, char **argv) 
 {  
   angle= new Rotation();
+  camPosition = new Position();
   glutInit(&argc, argv);  
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);  
   glutInitWindowSize(640, 480);  
@@ -310,5 +316,7 @@ int main(int argc, char **argv)
   glutPassiveMotionFunc(mouseMotion);
   glutFullScreen();
   glutMainLoop();  
+  delete angle;
+  delete camPosition;
   return 0;
 }
