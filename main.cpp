@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "tga.h"
 #include "dataobjects/rotation.hpp"
+#include "dataobjects/position.hpp"
 
 #include <math.h>
 
