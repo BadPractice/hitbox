@@ -10,12 +10,13 @@
 #include <stdlib.h> // for exit
 #include <unistd.h> // for usleep
 #include <stdio.h>
+#include "interfaces/action.hpp"
 #include "tga.h"
 #include "dataobjects/rotation.hpp"
 #include "dataobjects/position.hpp"
-
+#include <vector>
 #include <math.h>
-
+using namespace std;
 /* some math.h files don't define pi... */
 #ifndef M_PI
 #define M_PI 3.141592653
@@ -41,6 +42,10 @@ GLfloat angle_y = 0;  /* angle of spin around y axis of scene, in degrees */
 GLfloat angle_x = 0;  /* angle of spin around x axis  of scene, in degrees */
 Rotation *angle;
 Position *camPosition;
+vector<Action> actions;
+
+void handleEvents(){
+}
 
 void reportGLError(const char * msg)
 {
@@ -74,11 +79,9 @@ void specialKeyPressed(int key, int x, int y)
   switch (key) {
         
   case GLUT_KEY_UP:     /* <cursor up> */
-    advance+=  cosf(RAD((*angle).getY())) * 0.1f;
     glutPostRedisplay();
     break;
   case GLUT_KEY_DOWN:     /* <cursor down> */
-    advance-= cosf(RAD((*angle).getY())) * 0.1;
     glutPostRedisplay();
     break;
   }
