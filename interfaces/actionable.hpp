@@ -8,7 +8,7 @@
 #include <GL/glu.h>  
 #endif
 
-class Action{
-	virtual char get();
+class Actionable{
+	virtual char getType();
 	virtual void doCommand();
 };

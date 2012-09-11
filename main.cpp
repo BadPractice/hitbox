@@ -10,7 +10,7 @@
 #include <stdlib.h> // for exit
 #include <unistd.h> // for usleep
 #include <stdio.h>
-#include "interfaces/action.hpp"
+#include "interfaces/actionable.hpp"
 #include "tga.h"
 #include "dataobjects/rotation.hpp"
 #include "dataobjects/position.hpp"
@@ -41,8 +41,8 @@ int moving = 0;     /* flag that is true while mouse moves */
 GLfloat angle_y = 0;  /* angle of spin around y axis of scene, in degrees */
 GLfloat angle_x = 0;  /* angle of spin around x axis  of scene, in degrees */
 Rotation *angle;
-Position *camPosition;
-vector<Action> actions;
+//Position *camPosition;
+vector<Actionable> actions;
 
 void handleEvents(){
 }
@@ -97,22 +97,22 @@ void keyPressed(unsigned char key, int x, int y)
     break;
   case 'w':
 
-	(*camPosition).add(sinf(RAD((*angle).getY())) * 0.1f, //x value
+	Position::getInstance()->add(sinf(RAD((*angle).getY())) * 0.1f, //x value
 		cosf(RAD((*angle).getY())) * 0.1f);					//y value
     glutPostRedisplay();
     break;
    case 's':
-	(*camPosition).add(-sinf(RAD((*angle).getY())) * 0.1f,
+	Position::getInstance()->add(-sinf(RAD((*angle).getY())) * 0.1f,
 		-cosf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
     break;
   case 'a':
-	(*camPosition).add(-cosf(RAD((*angle).getY())) * 0.1f,
+	Position::getInstance()->add(-cosf(RAD((*angle).getY())) * 0.1f,
 		sinf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
     break;
    case 'd':
-	(*camPosition).add(cosf(RAD((*angle).getY())) * 0.1f,
+	Position::getInstance()->add(cosf(RAD((*angle).getY())) * 0.1f,
 		-sinf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
     break;
@@ -173,7 +173,7 @@ void display()
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
   glBindTexture(GL_TEXTURE_2D, texture);
 
-	glTranslatef(camPosition->getX(),0,-camPosition->getY());
+	glTranslatef(Position::getInstance()->getX(),0,-Position::getInstance()->getY());
   glPushMatrix();
   glTranslatef(-2, 0, 0);  
   glTranslatef(0, 0, 4);  
@@ -298,7 +298,7 @@ void mouseMotion(int x, int y) {
 int main(int argc, char **argv) 
 {  
   angle= new Rotation();
-  camPosition = new Position();
+  //camPosition = new Position();
   glutInit(&argc, argv);  
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);  
   glutInitWindowSize(640, 480);  
@@ -316,6 +316,6 @@ int main(int argc, char **argv)
   glutFullScreen();
   glutMainLoop();  
   delete angle;
-  delete camPosition;
+  //delete camPosition;
   return 0;
 }

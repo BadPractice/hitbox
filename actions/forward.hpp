@@ -10,5 +10,6 @@
 
 #include "../interfaces/actionable.hpp"
 class Forward : public Actionable{
-
+	char getType();
+	virtual void doCommand();
 };
