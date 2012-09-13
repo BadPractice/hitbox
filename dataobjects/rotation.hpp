@@ -10,10 +10,15 @@
 
 class Rotation{
 private:
+Rotation();
+Rotation& operator=(Rotation const&){};
+Rotation(Rotation const&){};  
+static Rotation* mPInstance;
+
 GLfloat angleY;  /* angle of spin around y axis of scene, in degrees */
 GLfloat angleX;  /* angle of spin around x axis  of scene, in degrees */
 public:
-Rotation();
+static Rotation* getInstance();
 GLfloat getX();
 GLfloat getY();
 void add(GLfloat, GLfloat);// adding rotation to the already exixting

@@ -1,3 +1,5 @@
+#ifndef ACTIONABLE_HPP
+#define ACTIONABLE_HPP
 #ifdef __APPLE__
 #include <GLUT/glut.h> 
 #include <OpenGL/gl.h>  
@@ -9,6 +11,8 @@
 #endif
 
 class Actionable{
-	virtual char getType();
-	virtual void doCommand();
+public:
+	virtual char getType() =0;
+	virtual void doCommand() =0;
 };
+#endif

@@ -1,4 +1,15 @@
 #include "rotation.hpp"
+
+Rotation *Rotation::mPInstance = NULL; 
+
+Rotation* Rotation::getInstance()
+{
+   if (!mPInstance)   // Only allow one instance of class to be generated.
+      mPInstance = new Rotation;
+
+   return mPInstance;
+}
+
 Rotation::Rotation(){
 	angleX= 0;
 	angleY= 0;

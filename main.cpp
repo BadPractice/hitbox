@@ -10,10 +10,11 @@
 #include <stdlib.h> // for exit
 #include <unistd.h> // for usleep
 #include <stdio.h>
-#include "interfaces/actionable.hpp"
 #include "tga.h"
 #include "dataobjects/rotation.hpp"
 #include "dataobjects/position.hpp"
+#include "interfaces/actionable.hpp"
+#include "actions/forward.hpp"
 #include <vector>
 #include <math.h>
 using namespace std;
@@ -42,7 +43,7 @@ GLfloat angle_y = 0;  /* angle of spin around y axis of scene, in degrees */
 GLfloat angle_x = 0;  /* angle of spin around x axis  of scene, in degrees */
 Rotation *angle;
 //Position *camPosition;
-vector<Actionable> actions;
+vector <Actionable*> actions;
 
 void handleEvents(){
 }
@@ -97,8 +98,7 @@ void keyPressed(unsigned char key, int x, int y)
     break;
   case 'w':
 
-	Position::getInstance()->add(sinf(RAD((*angle).getY())) * 0.1f, //x value
-		cosf(RAD((*angle).getY())) * 0.1f);					//y value
+	actions.push_back(new Forward);
     glutPostRedisplay();
     break;
    case 's':
