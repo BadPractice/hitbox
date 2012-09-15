@@ -17,6 +17,9 @@ void ActionList::add(char arg){
 	case 'w':
 	actions.push_back(new Forward());
 	break;
+	case 's':
+	actions.push_back(new Backward());
+	break;
 	default:
 	break;
 	}

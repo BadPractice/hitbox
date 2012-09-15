@@ -5,6 +5,7 @@
 #include "dataobjects/position.hpp"
 #include "interfaces/actionable.hpp"
 #include "actions/forward.hpp"
+#include "actions/backward.hpp"
 using namespace std;
 class ActionList{
 private:

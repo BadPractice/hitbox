@@ -2,8 +2,8 @@ GLFLAGS=-lglut -lGLU -lGL -lX11 -lm -lpthread
 
 all: hitbox
 
-hitbox: main.o tga.o rotation.o position.o forward.o actionlist.o
-	g++ -o hitbox main.o tga.o position.o rotation.o forward.o actionlist.o $(GLFLAGS)
+hitbox: main.o tga.o rotation.o position.o forward.o actionlist.o backward.o
+	g++ -o hitbox main.o tga.o position.o rotation.o forward.o actionlist.o backward.o $(GLFLAGS)
 
 main.o: main.cpp
 	g++ -c main.cpp $(GLFLAGS)
@@ -13,6 +13,9 @@ tga.o: tga.cpp
 
 forward.o: actions/forward.cpp actions/forward.hpp
 	g++ -c actions/forward.cpp $(GLFLAGS)
+
+backward.o:actions/backward.cpp actions/backward.hpp
+	g++ -c actions/backward.cpp $(GLFLAGS)
 	
 position.o: dataobjects/position.cpp dataobjects/position.hpp
 	g++ -c dataobjects/position.cpp $(GLFLAGS)
@@ -24,4 +27,4 @@ actionlist.o: forward.o position.o rotation.o
 	g++ -c actionlist.cpp $(GLFLAGS)
 	
 clean:
-	rm main.o tga.o rotation.o position.o forward.o hitbox
+	rm main.o tga.o rotation.o position.o forward.o backward.o actionlist.o hitbox
