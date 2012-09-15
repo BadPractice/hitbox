@@ -15,7 +15,7 @@
 #include "dataobjects/position.hpp"
 #include "interfaces/actionable.hpp"
 #include "actions/forward.hpp"
-#include <vector>
+#include "actionlist.hpp"
 #include <math.h>
 using namespace std;
 /* some math.h files don't define pi... */
@@ -41,9 +41,8 @@ int windowHeight, windowWidth;
 int moving = 0;     /* flag that is true while mouse moves */ 
 GLfloat angle_y = 0;  /* angle of spin around y axis of scene, in degrees */
 GLfloat angle_x = 0;  /* angle of spin around x axis  of scene, in degrees */
-Rotation *angle;
 //Position *camPosition;
-vector <Actionable*> actions;
+ActionList pressedKeys;
 
 void handleEvents(){
 }
@@ -88,6 +87,23 @@ void specialKeyPressed(int key, int x, int y)
   }
 }
 
+void keyReleased(unsigned char key, int x, int y) 
+{
+  usleep(100);
+  switch (key) {
+  case 27:
+    glutDestroyWindow(window); 
+    exit(0);                   
+    break;
+  case 'w':
+	pressedKeys.remove('w');
+    glutPostRedisplay();
+    break;
+  default:
+	break;
+	}
+}
+
 void keyPressed(unsigned char key, int x, int y) 
 {
   usleep(100);
@@ -97,11 +113,10 @@ void keyPressed(unsigned char key, int x, int y)
     exit(0);                   
     break;
   case 'w':
-
-	actions.push_back(new Forward);
+	pressedKeys.add('w');
     glutPostRedisplay();
     break;
-   case 's':
+  /* case 's':
 	Position::getInstance()->add(-sinf(RAD((*angle).getY())) * 0.1f,
 		-cosf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
@@ -115,7 +130,7 @@ void keyPressed(unsigned char key, int x, int y)
 	Position::getInstance()->add(cosf(RAD((*angle).getY())) * 0.1f,
 		-sinf(RAD((*angle).getY())) * 0.1f);
     glutPostRedisplay();
-    break;
+    break;*/
   default:
     break;
   }
@@ -162,11 +177,12 @@ void drawTeaPot(){
 
 void display()
 {
+	pressedKeys.execute();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  
   glLoadIdentity();  
 
   gluLookAt(0.,0.,0.,
-  -sinf(RAD((*angle).getY())),sinf(RAD((*angle).getX())), cosf(RAD((*angle).getY())), 
+  -sinf(RAD(Rotation::getInstance()->getY())),sinf(RAD(Rotation::getInstance()->getX())), cosf(RAD(Rotation::getInstance()->getY())), 
             0.,1.,0.);
 
   glEnable(GL_TEXTURE_2D);
@@ -284,7 +300,7 @@ void mouseMotion(int x, int y) {
     int ww = glutGet(GLUT_WINDOW_WIDTH);
     int wh = glutGet(GLUT_WINDOW_HEIGHT);
     /* calculate new modelview matrix values */
-    (*angle).add(angle_x-(y-wh/2)/MOUSESPEED, 
+    Rotation::getInstance()->add(angle_x-(y-wh/2)/MOUSESPEED, 
 		angle_y+(x - ww/2)/MOUSESPEED);//adding movement to aim
     wraped = false;
     glutWarpPointer(ww/2, wh/2); //setting curser back to middle
@@ -297,7 +313,6 @@ void mouseMotion(int x, int y) {
 
 int main(int argc, char **argv) 
 {  
-  angle= new Rotation();
   //camPosition = new Position();
   glutInit(&argc, argv);  
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);  
@@ -307,6 +322,7 @@ int main(int argc, char **argv)
   glutDisplayFunc(&display);  
   glutReshapeFunc(&resize);
   glutKeyboardFunc(&keyPressed);
+  glutKeyboardUpFunc(&keyReleased);
   glutSpecialFunc(&specialKeyPressed);
   init(640, 480);
   glutTimerFunc(15, timer, 1);
@@ -315,7 +331,7 @@ int main(int argc, char **argv)
   glutPassiveMotionFunc(mouseMotion);
   glutFullScreen();
   glutMainLoop();  
-  delete angle;
+  //delete actions;
   //delete camPosition;
   return 0;
 }

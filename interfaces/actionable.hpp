@@ -9,6 +9,7 @@
 #include <GL/gl.h>  
 #include <GL/glu.h>  
 #endif
+#define MOVESPEED 0.05f
 
 class Actionable{
 public:

@@ -1,3 +1,6 @@
+#ifndef POSITION_HPP
+#define POSITION_HPP
+
 #ifdef __APPLE__
 #include <GLUT/glut.h> 
 #include <OpenGL/gl.h>  
@@ -22,3 +25,4 @@ GLfloat getX();
 GLfloat getY();
 void add(GLfloat, GLfloat);// adding rotation to the already exixting
 };
+#endif

@@ -1,3 +1,5 @@
+#ifndef FORWARD_HPP
+#define FORWARD_HPP
 #ifdef __APPLE__
 #include <GLUT/glut.h> 
 #include <OpenGL/gl.h>  
@@ -30,3 +32,4 @@ public:
 	char getType();
 	void doCommand();
 };
+#endif
