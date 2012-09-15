@@ -20,6 +20,12 @@ void ActionList::add(char arg){
 	case 's':
 	actions.push_back(new Backward());
 	break;
+	case 'a':
+	actions.push_back(new Leftward());
+	break;
+	case 'd':
+	actions.push_back(new Rightward());
+	break;
 	default:
 	break;
 	}

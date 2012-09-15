@@ -6,6 +6,8 @@
 #include "interfaces/actionable.hpp"
 #include "actions/forward.hpp"
 #include "actions/backward.hpp"
+#include "actions/leftward.hpp"
+#include "actions/rightward.hpp"
 using namespace std;
 class ActionList{
 private:

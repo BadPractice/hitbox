@@ -103,6 +103,14 @@ void keyReleased(unsigned char key, int x, int y)
 	pressedKeys.remove('s');
     glutPostRedisplay();
     break;
+   case 'a':
+	pressedKeys.remove('a');
+	glutPostRedisplay();
+    break;
+   case 'd':
+	pressedKeys.remove('d');
+    glutPostRedisplay();
+    break;
   default:
 	break;
 	}
@@ -125,13 +133,11 @@ void keyPressed(unsigned char key, int x, int y)
     glutPostRedisplay();
     break;
   case 'a':
-	Position::getInstance()->add(-cosf(RAD(Rotation::getInstance()->getY())) * 0.1f,
-		sinf(RAD(Rotation::getInstance()->getY())) * 0.1f);
-    glutPostRedisplay();
+	pressedKeys.add('a');
+	glutPostRedisplay();
     break;
    case 'd':
-	Position::getInstance()->add(cosf(RAD(Rotation::getInstance()->getY())) * 0.1f,
-		-sinf(RAD(Rotation::getInstance()->getY())) * 0.1f);
+	pressedKeys.add('d');
     glutPostRedisplay();
     break;
   default:
