@@ -121,7 +121,7 @@ void create_scene()
 		y = scene.tri[i].vt[0].y;
 		z = scene.tri[i].vt[0].z;
 
-		glBindTexture(GL_TEXTURE_2D, texture[w])
+		glBindTexture(GL_TEXTURE_2D, texture[w]);
 
 		glTexCoord2f(u, w);
 		glVertex3f(x, y, z);
@@ -354,6 +354,7 @@ void init(int width, int height)
 	  case 1:
 		  info = tgaLoad("crate.tga");
 		  break;
+
 	  case 2:
 		  info = tgaLoad("marble.tga");
 		  break;
