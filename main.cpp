@@ -35,7 +35,7 @@ using namespace std;
 bool wraped =true;
 int window; 
 float advance = 0.0f, advanceX =0.0f;
-GLuint texture;
+GLuint texture[5];
 int animating = 1;
 int windowHeight, windowWidth;
 int moving = 0;     /* flag that is true while mouse moves */ 
@@ -47,6 +47,7 @@ ActionList pressedKeys;
 typedef struct vert
 {
 	float u, v, x, y, z;
+	int w;
 } VERTEX;
 
 typedef struct tri
@@ -65,6 +66,7 @@ SECTOR scene;
 void load_scene()
 {
 	float u, v, x, y, z;
+	int w;
 	int tris;
 	FILE *input;
 	char line[255];
@@ -88,10 +90,11 @@ void load_scene()
 			while((line[0]=='/')||(line[0]=='\n'));
 			
 
-			sscanf(line, "%f %f %f %f %f", &u, &v, &x, &y, &z);
+			sscanf(line, "%f %f %d %f %f %f", &u, &v, &w, &x, &y, &z);
 
 			scene.tri[i].vt[j].u = u;
 			scene.tri[i].vt[j].v = v;
+			scene.tri[i].vt[j].w = w;
 			scene.tri[i].vt[j].x = x;
 			scene.tri[i].vt[j].y = y;
 			scene.tri[i].vt[j].z = z;
@@ -105,6 +108,7 @@ void load_scene()
 void create_scene()
 {
 	GLfloat u, v, x, y, z;
+	int w;
 
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.4, 0.3, 0.6);
@@ -112,26 +116,34 @@ void create_scene()
 	{
 		u = scene.tri[i].vt[0].u;
 		v = scene.tri[i].vt[0].v;
+		w = scene.tri[i].vt[0].w;
 		x = scene.tri[i].vt[0].x;
 		y = scene.tri[i].vt[0].y;
 		z = scene.tri[i].vt[0].z;
 
+		glBindTexture(GL_TEXTURE_2D, texture[w])
+
+		glTexCoord3f(u, w);
 		glVertex3f(x, y, z);
 
 		u = scene.tri[i].vt[1].u;
 		v = scene.tri[i].vt[1].v;
+		w = scene.tri[i].vt[1].w;
 		x = scene.tri[i].vt[1].x;
 		y = scene.tri[i].vt[1].y;
 		z = scene.tri[i].vt[1].z;
 
+		glTexCoord3f(u, w);
 		glVertex3f(x, y, z);
 
 		u = scene.tri[i].vt[2].u;
 		v = scene.tri[i].vt[2].v;
+		w = scene.tri[i].vt[2].w;
 		x = scene.tri[i].vt[2].x;
 		y = scene.tri[i].vt[2].y;
 		z = scene.tri[i].vt[2].z;
 
+		glTexCoord3f(u, w);
 		glVertex3f(x, y, z);
 	}
 	glEnd();
@@ -290,7 +302,7 @@ void display()
   
   glEnable(GL_TEXTURE_2D);
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-  glBindTexture(GL_TEXTURE_2D, texture);
+  glBindTexture(GL_TEXTURE_2D, texture[1]);
 
 	glTranslatef(Position::getInstance()->getX(),0,-Position::getInstance()->getY());
   glPushMatrix();
@@ -329,8 +341,31 @@ void init(int width, int height)
   resize(width, height);
 	glutSetCursor(GLUT_CURSOR_NONE);
   GLsizei w, h;
+
+  for(int i = 0; i < 5 ;i++){
+
   tgaInfo *info = 0;
   int mode;
+
+  switch(i){
+	  case 0:
+		  info = tgaLoad("brick.tga");
+		  break;
+	  case 1:
+		  info = tgaLoad("crate.tga");
+		  break;
+	  case 2:
+		  info = tgaLoad("marble.tga");
+		  break;
+	  case 3:
+		  info = tgaLoad("pillar.tga");
+		  break;
+	  case 4:
+		  info = tgaLoad("wood.tga");
+		  break;
+	  default:
+		  break;
+	  }
 
   info = tgaLoad("crate.tga");
 
@@ -346,10 +381,10 @@ void init(int width, int height)
   }
 
   mode = info->pixelDepth / 8;  // will be 3 for rgb, 4 for rgba
-  glGenTextures(1, &texture);
+  glGenTextures(1, &texture[i]);
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  glBindTexture(GL_TEXTURE_2D, texture);
+  glBindTexture(GL_TEXTURE_2D, texture[i]);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -367,6 +402,8 @@ void init(int width, int height)
   reportGLError("after uploading texture");
 
   tgaDestroy(info);
+
+  }
 
 }
 
