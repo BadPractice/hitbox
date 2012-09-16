@@ -282,12 +282,12 @@ void display()
 	pressedKeys.execute();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  
   glLoadIdentity();
-  glTranslatef(0.0, 0.0, 0.0);
-  create_scene();
   gluLookAt(0.,0.,0.,
   -sinf(RAD(Rotation::getInstance()->getY())),sinf(RAD(Rotation::getInstance()->getX())), cosf(RAD(Rotation::getInstance()->getY())), 
             0.,1.,0.);
-
+  
+  create_scene();
+  
   glEnable(GL_TEXTURE_2D);
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
   glBindTexture(GL_TEXTURE_2D, texture);
