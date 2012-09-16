@@ -110,8 +110,9 @@ void create_scene()
 	GLfloat u, v, x, y, z;
 	int w;
 
+glBindTexture(GL_TEXTURE_2D, texture[3]);
 	glBegin(GL_TRIANGLES);
-	glColor3f(0.4, 0.3, 0.6);
+	//glColor3f(0.4, 0.3, 0.6);
 	for(int i = 0; i < scene.ntr;i++)
 	{
 		u = scene.tri[i].vt[0].u;
@@ -121,7 +122,7 @@ void create_scene()
 		y = scene.tri[i].vt[0].y;
 		z = scene.tri[i].vt[0].z;
 
-		glBindTexture(GL_TEXTURE_2D, texture[w]);
+		//glBindTexture(GL_TEXTURE_2D, texture[w]);
 
 		glTexCoord2f(u, w);
 		glVertex3f(x, y, z);
