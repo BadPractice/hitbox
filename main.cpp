@@ -44,6 +44,99 @@ GLfloat angle_x = 0;  /* angle of spin around x axis  of scene, in degrees */
 //Position *camPosition;
 ActionList pressedKeys;
 
+typedef struct vert
+{
+	float u, v, x, y, z;
+} VERTEX;
+
+typedef struct tri
+{
+	VERTEX vt[3];
+} TRIANGLE;
+
+typedef struct sect
+{
+	int ntr;
+	TRIANGLE* tri;
+} SECTOR;
+
+SECTOR scene;
+
+void load_scene()
+{
+	float u, v, x, y, z;
+	int tris;
+	FILE *input;
+	char line[255];
+	input = fopen("worlddata.txt", "rt");
+
+	fgets(line, 255, input);
+
+	sscanf(line, "Total number of Triangles: %d\n", &tris);
+
+	scene.tri=new TRIANGLE[tris];
+	scene.ntr=tris;
+
+	for(int i=0;i<tris;i++)
+	{
+		for(int j = 0;j < 3;j++)
+		{
+			do
+			{
+				fgets(line, 255, input);
+			}
+			while((line[0]=='/')||(line[0]=='\n'));
+			
+
+			sscanf(line, "%f %f %f %f %f", &u, &v, &x, &y, &z);
+
+			scene.tri[i].vt[j].u = u;
+			scene.tri[i].vt[j].v = v;
+			scene.tri[i].vt[j].x = x;
+			scene.tri[i].vt[j].y = y;
+			scene.tri[i].vt[j].z = z;
+		}
+	}
+
+	fclose(input);
+	return;
+}
+
+void create_scene()
+{
+	GLfloat u, v, x, y, z;
+
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.4, 0.3, 0.6);
+	for(int i = 0; i < scene.ntr;i++)
+	{
+		u = scene.tri[i].vt[0].u;
+		v = scene.tri[i].vt[0].v;
+		x = scene.tri[i].vt[0].x;
+		y = scene.tri[i].vt[0].y;
+		z = scene.tri[i].vt[0].z;
+
+		glVertex3f(x, y, z);
+
+		u = scene.tri[i].vt[1].u;
+		v = scene.tri[i].vt[1].v;
+		x = scene.tri[i].vt[1].x;
+		y = scene.tri[i].vt[1].y;
+		z = scene.tri[i].vt[1].z;
+
+		glVertex3f(x, y, z);
+
+		u = scene.tri[i].vt[2].u;
+		v = scene.tri[i].vt[2].v;
+		x = scene.tri[i].vt[2].x;
+		y = scene.tri[i].vt[2].y;
+		z = scene.tri[i].vt[2].z;
+
+		glVertex3f(x, y, z);
+	}
+	glEnd();
+}
+
 void handleEvents(){
 }
 
@@ -188,8 +281,9 @@ void display()
 {
 	pressedKeys.execute();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  
-  glLoadIdentity();  
-
+  glLoadIdentity();
+  glTranslatef(0.0, 0.0, 0.0);
+  create_scene();
   gluLookAt(0.,0.,0.,
   -sinf(RAD(Rotation::getInstance()->getY())),sinf(RAD(Rotation::getInstance()->getX())), cosf(RAD(Rotation::getInstance()->getY())), 
             0.,1.,0.);
@@ -339,6 +433,7 @@ int main(int argc, char **argv)
   glutMotionFunc(mouseMotion);
   glutPassiveMotionFunc(mouseMotion);
   glutFullScreen();
+  load_scene();
   glutMainLoop();  
   //delete actions;
   //delete camPosition;
