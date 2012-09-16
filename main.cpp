@@ -123,7 +123,7 @@ void create_scene()
 
 		glBindTexture(GL_TEXTURE_2D, texture[w])
 
-		glTexCoord3f(u, w);
+		glTexCoord2f(u, w);
 		glVertex3f(x, y, z);
 
 		u = scene.tri[i].vt[1].u;
@@ -133,7 +133,7 @@ void create_scene()
 		y = scene.tri[i].vt[1].y;
 		z = scene.tri[i].vt[1].z;
 
-		glTexCoord3f(u, w);
+		glTexCoord2f(u, w);
 		glVertex3f(x, y, z);
 
 		u = scene.tri[i].vt[2].u;
@@ -143,7 +143,7 @@ void create_scene()
 		y = scene.tri[i].vt[2].y;
 		z = scene.tri[i].vt[2].z;
 
-		glTexCoord3f(u, w);
+		glTexCoord2f(u, w);
 		glVertex3f(x, y, z);
 	}
 	glEnd();
