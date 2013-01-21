@@ -14,9 +14,12 @@
 #include "dataobjects/rotation.hpp"
 #include "dataobjects/position.hpp"
 #include "interfaces/actionable.hpp"
+#include "World.h"
 #include "actions/forward.hpp"
 #include "actionlist.hpp"
 #include <math.h>
+#include "drawcube.h"
+#include <iostream>
 using namespace std;
 /* some math.h files don't define pi... */
 #ifndef M_PI
@@ -145,47 +148,14 @@ void keyPressed(unsigned char key, int x, int y)
   }
 }
 
-void drawCube() 
-{
-	glBegin(GL_QUADS);
-  // front face
-  glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-  glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-  glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
-  glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
-  // back face
-  glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-  glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
-  glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
-  glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
-  // top face
-  glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
-  glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
-  glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
-  glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
-  // bottom face
-  glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-  glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
-  glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-  glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-  // right face
-  glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
-  glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
-  glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
-  glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-  // left face
-  glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-  glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-  glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
-  glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
-  glEnd();
-}
+
 void drawTeaPot(){
 	glutSolidTeapot(1);
 }
 
 void display()
 {
+	float distance;
 	pressedKeys.execute();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  
   glLoadIdentity();  
@@ -200,27 +170,25 @@ void display()
 
 	glTranslatef(Position::getInstance()->getX(),0,-Position::getInstance()->getY());
   glPushMatrix();
-  glTranslatef(-2, 0, 0);  
+ // glTranslatef(-2, 0, 0);  
   glTranslatef(0, 0, 4);  
-  drawTeaPot();
-  glTranslatef(0, 0, -4);  
-  drawTeaPot();
-  glTranslatef(0, 0, -4);  
-  drawTeaPot();
-  glPopMatrix();
-
-  glPushMatrix();
-  glTranslatef(2, 0, 0);  
-  glTranslatef(0, 0, 4);  
-  drawTeaPot();
-  glTranslatef(0, 0, -4);  
-  drawTeaPot();
-  glTranslatef(0, 0, -4);  
-  drawTeaPot();
-  glPopMatrix();
-  
+  distance =sqrt(pow(Position::getInstance()->getX()-0, 2) + pow(Position::getInstance()->getY()-4, 2));
+  if(distance> 5 && distance < 10)
+  {
+	  drawTeaPot();
+  }
+  if(distance> 10)
+  {
+	  drawPyram();
+  }
+  if(distance < 5)
+  {
+	  drawCube();
+  }
+ std::cout<<sqrt(pow(Position::getInstance()->getX()-0, 2) + pow(Position::getInstance()->getY()-0, 2) )<<std::endl;
+ 
+  glPopMatrix(); 
   glDisable(GL_TEXTURE_2D);
-
   glutSwapBuffers();
 }
 
@@ -322,6 +290,7 @@ void mouseMotion(int x, int y) {
 
 int main(int argc, char **argv) 
 {  
+  World myWorld = World();
   //camPosition = new Position();
   glutInit(&argc, argv);  
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);  
