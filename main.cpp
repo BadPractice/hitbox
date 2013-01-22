@@ -34,7 +34,7 @@ using namespace std;
 #define atan2f(x, y) ((float)atan2((x), (y)))
 #endif 
 
-#define MOUSESPEED 3
+#define MOUSESPEED 10
 bool wraped =true;
 int window; 
 float advance = 0.0f, advanceX =0.0f;
@@ -153,6 +153,16 @@ void drawTeaPot(){
 	glutSolidTeapot(1);
 }
 
+void drawTransperent()
+{
+		//glPushMatrix();
+		glTranslatef(0, 0, 8); 
+		glColor4f(1.0f,0.0f,1.0f, 0.5f);
+		drawTeaPot();
+		glTranslatef(0, 0, -8);
+		//glPopMatrix();
+}
+
 void display()
 {
 	float distance;
@@ -163,32 +173,44 @@ void display()
   gluLookAt(0.,0.,0.,
   -sinf(RAD(Rotation::getInstance()->getY())),sinf(RAD(Rotation::getInstance()->getX())), cosf(RAD(Rotation::getInstance()->getY())), 
             0.,1.,0.);
-
-  glEnable(GL_TEXTURE_2D);
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-  glBindTexture(GL_TEXTURE_2D, texture);
-
+            distance =sqrt(pow(Position::getInstance()->getX()-0, 2) + pow(Position::getInstance()->getY()-4, 2));
+  //glEnable(GL_TEXTURE_2D);
+  //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+  //glBindTexture(GL_TEXTURE_2D, texture);
 	glTranslatef(Position::getInstance()->getX(),0,-Position::getInstance()->getY());
-  glPushMatrix();
- // glTranslatef(-2, 0, 0);  
+ glPushMatrix();
+   if(Position::getInstance()->getY()<2)
+	{
+		drawTransperent();
+	}
+	
+ 
   glTranslatef(0, 0, 4);  
-  distance =sqrt(pow(Position::getInstance()->getX()-0, 2) + pow(Position::getInstance()->getY()-4, 2));
-  if(distance> 5 && distance < 10)
-  {
-	  drawTeaPot();
-  }
+
   if(distance> 10)
   {
+	  glColor4f(0.0f,1.0f,0.0f, 1.0f);
 	  drawPyram();
+  }
+    if(distance> 5 && distance < 10)
+  {
+	  glColor4f(1.0f,0.0f,0.0f, 1.0f);
+	  drawTeaPot();
   }
   if(distance < 5)
   {
+	  glColor4f(0.0f,0.0f,1.0f, 1.0f);
 	  drawCube();
   }
- std::cout<<sqrt(pow(Position::getInstance()->getX()-0, 2) + pow(Position::getInstance()->getY()-0, 2) )<<std::endl;
- 
-  glPopMatrix(); 
-  glDisable(GL_TEXTURE_2D);
+  glTranslatef(0, 0, -4);
+  
+ if(Position::getInstance()->getY()>2)
+ {
+	drawTransperent();
+  }
+    glPopMatrix();
+   
+  //glDisable(GL_TEXTURE_2D);
   glutSwapBuffers();
 }
 
@@ -290,24 +312,31 @@ void mouseMotion(int x, int y) {
 
 int main(int argc, char **argv) 
 {  
+	
   World myWorld = World();
   //camPosition = new Position();
+  
   glutInit(&argc, argv);  
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);  
   glutInitWindowSize(640, 480);  
   glutInitWindowPosition(0, 0);  
+  
+    
   window = glutCreateWindow("foo");  
   glutDisplayFunc(&display);  
   glutReshapeFunc(&resize);
   glutKeyboardFunc(&keyPressed);
   glutKeyboardUpFunc(&keyReleased);
   glutSpecialFunc(&specialKeyPressed);
-  init(640, 480);
+
+  glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+  
   glutTimerFunc(15, timer, 1);
  // glutMouseFunc(mouse);
   glutMotionFunc(mouseMotion);
   glutPassiveMotionFunc(mouseMotion);
-  glutFullScreen();
+  //glutFullScreen();
   glutMainLoop();  
   //delete actions;
   //delete camPosition;
