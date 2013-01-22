@@ -47,6 +47,7 @@ GLfloat angle_x = 0;  /* angle of spin around x axis  of scene, in degrees */
 //Position *camPosition;
 ActionList pressedKeys;
 
+
 void handleEvents(){
 }
 
@@ -173,13 +174,14 @@ void display()
   gluLookAt(0.,0.,0.,
   -sinf(RAD(Rotation::getInstance()->getY())),sinf(RAD(Rotation::getInstance()->getX())), cosf(RAD(Rotation::getInstance()->getY())), 
             0.,1.,0.);
+            std::cout<<Position::getInstance()->getY()<<std::endl;
             distance =sqrt(pow(Position::getInstance()->getX()-0, 2) + pow(Position::getInstance()->getY()-4, 2));
   //glEnable(GL_TEXTURE_2D);
   //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
   //glBindTexture(GL_TEXTURE_2D, texture);
 	glTranslatef(Position::getInstance()->getX(),0,-Position::getInstance()->getY());
  glPushMatrix();
-   if(Position::getInstance()->getY()<2)
+   if(Position::getInstance()->getY()<6)
 	{
 		drawTransperent();
 	}
@@ -204,7 +206,7 @@ void display()
   }
   glTranslatef(0, 0, -4);
   
- if(Position::getInstance()->getY()>2)
+ if(Position::getInstance()->getY()>6)
  {
 	drawTransperent();
   }
@@ -328,6 +330,14 @@ int main(int argc, char **argv)
   glutKeyboardFunc(&keyPressed);
   glutKeyboardUpFunc(&keyReleased);
   glutSpecialFunc(&specialKeyPressed);
+
+glEnable(GL_LIGHTING);
+glColorMaterial ( GL_FRONT_AND_BACK, GL_EMISSION ) ;
+   glEnable ( GL_COLOR_MATERIAL ) ;
+//glDisable(GL_COLOR_MATERIAL);
+glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE ) ;
+glEnable(GL_LIGHT0);
+
 
   glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
