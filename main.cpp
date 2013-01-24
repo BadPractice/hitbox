@@ -11,6 +11,7 @@
 #include <unistd.h> // for usleep
 #include <stdio.h>
 #include "tga.h"
+#include "drawcube.h"
 #include "dataobjects/rotation.hpp"
 #include "dataobjects/position.hpp"
 #include "interfaces/actionable.hpp"
@@ -145,47 +146,25 @@ void keyPressed(unsigned char key, int x, int y)
   }
 }
 
-void drawCube() 
-{
-	glBegin(GL_QUADS);
-  // front face
-  glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-  glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-  glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
-  glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
-  // back face
-  glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-  glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
-  glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
-  glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
-  // top face
-  glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
-  glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
-  glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
-  glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
-  // bottom face
-  glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-  glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
-  glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-  glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-  // right face
-  glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
-  glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
-  glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
-  glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-  // left face
-  glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-  glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-  glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
-  glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
-  glEnd();
-}
+
 void drawTeaPot(){
 	glutSolidTeapot(1);
 }
 
+void drawTransperent()
+{
+		//glPushMatrix();
+		glTranslatef(0, 0, 8); 
+		glColor4f(1.0f,0.0f,1.0f, 0.5f);
+		drawTeaPot();
+		glTranslatef(0, 0, -8);
+		//glPopMatrix();
+}
+
 void display()
 {
+	float distance;
+	//GLfloat AmbientColor[] = {0.0f,0.0f,0.0f,0.0f};
 	pressedKeys.execute();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  
   glLoadIdentity();  
@@ -193,34 +172,48 @@ void display()
   gluLookAt(0.,0.,0.,
   -sinf(RAD(Rotation::getInstance()->getY())),sinf(RAD(Rotation::getInstance()->getX())), cosf(RAD(Rotation::getInstance()->getY())), 
             0.,1.,0.);
-
-  glEnable(GL_TEXTURE_2D);
+            //glLightfv(GL_LIGHT0,GL_AMBIENT, AmbientColor);
+            //std::cout<<Position::getInstance()->getY()<<std::endl;
+            distance =sqrt(pow(Position::getInstance()->getX()-0, 2) + pow(Position::getInstance()->getY()-4, 2));
+   glEnable(GL_TEXTURE_2D);
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
   glBindTexture(GL_TEXTURE_2D, texture);
-
-	glTranslatef(Position::getInstance()->getX(),0,-Position::getInstance()->getY());
-  glPushMatrix();
-  glTranslatef(-2, 0, 0);  
-  glTranslatef(0, 0, 4);  
-  drawTeaPot();
-  glTranslatef(0, 0, -4);  
-  drawTeaPot();
-  glTranslatef(0, 0, -4);  
-  drawTeaPot();
-  glPopMatrix();
-
-  glPushMatrix();
-  glTranslatef(2, 0, 0);  
-  glTranslatef(0, 0, 4);  
-  drawTeaPot();
-  glTranslatef(0, 0, -4);  
-  drawTeaPot();
-  glTranslatef(0, 0, -4);  
-  drawTeaPot();
-  glPopMatrix();
   
-  glDisable(GL_TEXTURE_2D);
+	glTranslatef(Position::getInstance()->getX(),0,-Position::getInstance()->getY());
+ glPushMatrix();
+   if(Position::getInstance()->getY()<6)
+	{
+		drawTransperent();
+	}
+	
+ 
+  glTranslatef(0, 0, 4);  
 
+  if(distance> 10)
+  {
+	  glColor4f(1.0f,1.0f,0.0f, 1.0f);
+	  drawPyram();
+  }
+    if(distance> 5 && distance < 10)
+  {
+	  glBindTexture(GL_TEXTURE_2D, texture);
+	//  glColor4f(1.0f,0.0f,0.0f, 0.5f);
+	  drawTeaPot();
+  }
+  if(distance < 5)
+  {
+	 // glColor4f(0.0f,0.0f,1.0f, 0.5f);
+	  drawCube();
+  }
+  glTranslatef(0, 0, -4);
+  
+ if(Position::getInstance()->getY()>6)
+ {
+	drawTransperent();
+  }
+    glPopMatrix();
+   
+  glDisable(GL_TEXTURE_2D);
   glutSwapBuffers();
 }
 
@@ -322,6 +315,7 @@ void mouseMotion(int x, int y) {
 
 int main(int argc, char **argv) 
 {  
+	
   //camPosition = new Position();
   glutInit(&argc, argv);  
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);  
@@ -333,12 +327,25 @@ int main(int argc, char **argv)
   glutKeyboardFunc(&keyPressed);
   glutKeyboardUpFunc(&keyReleased);
   glutSpecialFunc(&specialKeyPressed);
+  
+  //glEnable(GL_LIGHTING);
+  //glEnable ( GL_COLOR_MATERIAL ) ;
+  //glEnable(GL_LIGHT0);
+ // glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE ) ;
+//glColorMaterial ( GL_FRONT_AND_BACK, GL_EMISSION ) ;
+//glDisable(GL_COLOR_MATERIAL);
+  
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+  
   init(640, 480);
   glutTimerFunc(15, timer, 1);
  // glutMouseFunc(mouse);
+ 
+ 
   glutMotionFunc(mouseMotion);
   glutPassiveMotionFunc(mouseMotion);
-  glutFullScreen();
+  //glutFullScreen();
   glutMainLoop();  
   //delete actions;
   //delete camPosition;
